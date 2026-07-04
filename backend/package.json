@@ -1,0 +1,23 @@
+{
+  "name": "rrhh-backend",
+  "version": "0.1.0",
+  "description": "Backend minimal para RRHH con SQLite y endpoints básicos",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "python ../db/init_db.py"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.10.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "helmet": "^6.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0"
+  }
+}

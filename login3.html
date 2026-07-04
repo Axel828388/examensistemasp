@@ -1,0 +1,948 @@
+6<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio de Sesión - RRHH</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('img/fondo.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 40px 30px 30px 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            width: 350px;
+            text-align: center;
+            backdrop-filter: blur(2px);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .logo {
+            width: 220px;
+            height: auto;
+            margin-bottom: 18px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+        .input-group input[type="password"] {
+            padding-right: 40px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #888;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #0056b3 60%, #0083b3 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #004494 60%, #006e94 100%);
+        }
+        .dark-mode {
+            background-color: #181a1b !important;
+        }
+        .dark-mode .login-container {
+            background-color: #23272f !important;
+            color: #f5f5f5 !important;
+        }
+        .dark-mode input[type="text"], .dark-mode input[type="password"] {
+            background-color: #2c2f36;
+            color: #f5f5f5;
+            border: 1px solid #444;
+        }
+        .dark-mode .toggle-password {
+            color: #f5f5f5;
+        }
+        .dark-mode button {
+            background: linear-gradient(90deg, #222a3a 60%, #2c3a4a 100%);
+            color: #f5f5f5;
+        }
+        .dark-mode button:hover {
+            background: linear-gradient(90deg, #1a2232 60%, #22324a 100%);
+        }
+        .dark-mode h2, .dark-mode div, .dark-mode a {
+            color: #f5f5f5 !important;
+        }
+        .admin-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .admin-menu button {
+            flex: 1 1 calc(50% - 10px);
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(90deg, #0056b3 60%, #0083b3 100%);
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .admin-menu button:hover {
+            background: linear-gradient(90deg, #004494 60%, #006e94 100%);
+        }
+        .admin-content {
+            text-align: left;
+            background: #f4f8fc;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+        }
+        .admin-content h3 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        .admin-card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+        }
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: #eef7ff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .admin-item button {
+            margin-left: 8px;
+            padding: 8px 10px;
+            min-width: auto;
+            width: auto;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #0083b3;
+            color: white;
+            font-size: 14px;
+        }
+        .admin-item button.reject {
+            background: #d64545;
+        }
+        .admin-item button.secondary {
+            background: #5a6a7a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container" id="loginContainer">
+        <img src="img/logo.png" alt="Logotipo RRHH" class="logo">
+        <h2 style="margin-bottom: 8px; color: #1a2a3a; font-size: 24px; font-weight: bold;">SOLUCIONES RRHH</h2>
+        <div style="color: #5a6a7a; font-size: 15px; margin-bottom: 22px;">GESTIÓN INTEGRAL DEL TALENTO</div>
+        <form id="loginForm" autocomplete="off">
+            <div class="input-group">
+                <input type="text" name="username" autocomplete="off" placeholder="Usuario" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" autocomplete="off" placeholder="Contraseña" required id="loginPassword">
+                <button type="button" class="toggle-password" tabindex="-1" onclick="togglePassword('loginPassword', this)" aria-label="Mostrar contraseña">&#128065;</button>
+            </div>
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="errorMessage" style="color: red; margin-top: 10px; display: none;"></div>
+        <div style="margin-top: 10px;">
+            <input type="checkbox" id="rememberMe"> <label for="rememberMe" style="font-size: 14px; color: #5a6a7a;">Recordarme</label>
+        </div>
+        <div style="margin-top: 10px; color: #5a6a7a; font-size: 14px;">
+            <a href="#" id="forgotPassword" style="color:#0056b3;text-decoration:underline;">Olvidé mi contraseña</a>
+        </div>
+        <div style="margin-top: 16px; color: #5a6a7a; font-size: 14px;">
+            ¿No tienes cuenta? <a href="#" id="showRegister" style="color:#0056b3;text-decoration:underline;">Crear una cuenta</a>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="login-container" id="dashboardContainer" style="display:none; width: 500px;">
+        <img src="img/logo.png" alt="Logotipo RRHH" class="logo">
+        <h2 style="margin-bottom: 8px; color: #1a2a3a; font-size: 24px; font-weight: bold;">Panel de Gestión</h2>
+        <div style="color: #5a6a7a; font-size: 15px; margin-bottom: 22px;">Bienvenido, selecciona un módulo:</div>
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+            <button class="dashboard-btn" onclick="window.location.href='auditoria.html'" style="background:#f4f8fc;border-radius:10px;padding:18px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:none;cursor:pointer;font-size:18px;color:#0056b3;font-weight:bold;">
+                1. Auditoría
+            </button>
+            <button class="dashboard-btn" onclick="window.location.href='clima.html'" style="background:#f4f8fc;border-radius:10px;padding:18px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:none;cursor:pointer;font-size:18px;color:#0083b3;font-weight:bold;">
+                2. Clima Organizacional
+            </button>
+            <button class="dashboard-btn" onclick="window.location.href='comunicacion.html'" style="background:#f4f8fc;border-radius:10px;padding:18px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:none;cursor:pointer;font-size:18px;color:#1a2a3a;font-weight:bold;">
+                3. Comunicación Interna
+            </button>
+                <button class="dashboard-btn" onclick="window.location.href='sensores.html'" style="background:#f4f8fc;border-radius:10px;padding:18px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:none;cursor:pointer;font-size:18px;color:#0056b3;font-weight:bold;">
+                4. Sensores y Hardware
+            </button>
+        </div>
+        <button style="margin-top:24px;background:#b32d2d;" onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <div class="login-container" id="adminContainer" style="display:none; width: 600px;">
+        <img src="img/logo.png" alt="Logotipo RRHH" class="logo">
+        <h2 style="margin-bottom: 8px; color: #1a2a3a; font-size: 24px; font-weight: bold;">Menú Administrador</h2>
+        <div style="color: #5a6a7a; font-size: 15px; margin-bottom: 22px;">Accede a las funciones de administración.</div>
+        <div class="admin-menu">
+            <button type="button" onclick="showAdminSection('usuarios')">👥 Usuarios</button>
+            <button type="button" onclick="showAdminSection('auditorias')">📋 Auditorías</button>
+            <button type="button" onclick="showAdminSection('comunicacion')">📢 Comunicación</button>
+            <button type="button" onclick="showAdminSection('videollamadas')">📹 Videollamadas</button>
+            <button type="button" onclick="showAdminSection('reportes')">📈 Reportes</button>
+            <button type="button" onclick="logout()">🚪 Cerrar sesión</button>
+        </div>
+        <div id="adminContent" class="admin-content" style="display:none;"></div>
+    </div>
+
+    <div class="login-container" id="registerContainer" style="display:none;">
+        <img src="img/logo.png" alt="Logotipo RRHH" class="logo">
+        <h2 style="margin-bottom: 8px; color: #1a2a3a; font-size: 24px; font-weight: bold;">Crear Cuenta</h2>
+        <div style="color: #5a6a7a; font-size: 15px; margin-bottom: 22px;">Registra tus datos para acceder</div>
+        <form id="registerForm">
+            <div class="input-group">
+                <input type="text" placeholder="Usuario" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Contraseña" required id="registerPassword">
+                <button type="button" class="toggle-password" onclick="togglePassword('registerPassword', this)">&#128065;</button>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Confirmar contraseña" required id="registerPassword2">
+                <button type="button" class="toggle-password" onclick="togglePassword('registerPassword2', this)">&#128065;</button>
+            </div>
+            <button type="submit">Crear cuenta</button>
+        </form>
+        <div style="margin-top: 16px; color: #5a6a7a; font-size: 14px;">
+            ¿Ya tienes cuenta? <a href="#" id="showLogin" style="color:#0056b3;text-decoration:underline;">Iniciar sesión</a>
+        </div>
+    </div>
+
+    <div class="login-container" id="forgotContainer" style="display:none;">
+        <img src="img/logo.png" alt="Logotipo RRHH" class="logo">
+        <h2 style="margin-bottom: 8px; color: #1a2a3a; font-size: 24px; font-weight: bold;">Cambiar Contraseña</h2>
+        <div style="color: #5a6a7a; font-size: 15px; margin-bottom: 22px;">Ingresa tu usuario y la nueva contraseña para actualizarla.</div>
+        <form id="forgotForm">
+            <div class="input-group">
+                <input type="text" placeholder="Usuario" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Nueva contraseña" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Confirmar nueva contraseña" required>
+            </div>
+            <button type="submit">Cambiar contraseña</button>
+        </form>
+        <div style="margin-top: 16px; color: #5a6a7a; font-size: 14px;">
+            <a href="#" id="backToLogin" style="color:#0056b3;text-decoration:underline;">Volver al login</a>
+        </div>
+    </div>
+
+    <script>
+        const usersKey = 'rrhh_users';
+        const rememberedKey = 'rememberedUser';
+        const currentUserKey = 'currentUser';
+        const videoRequestsKey = 'clima_reuniones';
+        // Detect API base URL dynamically so it works in browser and Android emulator
+        let API_BASE = (function(){
+            // allow override by querystring or localStorage for testing
+            try {
+                const p = new URLSearchParams(location.search).get('api');
+                if (p) return p;
+                const ls = localStorage.getItem('rrhh_api_base');
+                if (ls) return ls;
+            } catch(e) {}
+            try {
+                if (location.protocol === 'http:' || location.protocol === 'https:') {
+                    return location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+                }
+            } catch(e) {}
+            const ua = navigator.userAgent || '';
+            if (/Android/i.test(ua)) return 'http://10.0.2.2:3000'; // Android emulator host
+            return 'http://127.0.0.1:3000';
+        })();
+        console.log('API_BASE =', API_BASE);
+        let users = [];
+        let videoRequests = [];
+
+        async function loadUsers() {
+            // Try to load from API if available
+            try {
+                const res = await fetch(API_BASE + '/api/users', { headers: {} });
+                if (res.ok) {
+                    const json = await res.json();
+                    users = json.map(u => ({ username: u.username, password: null, role: u.role }));
+                    return;
+                }
+            } catch (e) {
+                // fallback to localStorage
+            }
+            let storedUsers = localStorage.getItem(usersKey);
+            if (storedUsers) {
+                try { users = JSON.parse(storedUsers); } catch (error) { users = []; }
+            }
+            if (!Array.isArray(users)) users = [];
+            // ensure demo accounts
+            if (!users.some(u => u.username === 'car')) users.unshift({username: 'car', password: '123', role: 'admin'});
+            if (!users.some(u => u.username === 'user')) users.push({username: 'user', password: 'pass', role: 'user'});
+            saveUsers();
+        }
+
+        function saveUsers() {
+            localStorage.setItem(usersKey, JSON.stringify(users));
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function resetLoginForm() {
+            let loginForm = document.getElementById('loginForm');
+            loginForm.reset();
+            loginForm.querySelector('input[type="text"]').value = '';
+            loginForm.querySelector('input[type="password"]').value = '';
+            document.getElementById('rememberMe').checked = false;
+            hideError();
+        }
+
+        function resetRegisterForm() {
+            let registerForm = document.getElementById('registerForm');
+            registerForm.querySelector('input[type="text"]').value = '';
+            registerForm.querySelectorAll('input[type="password"]').forEach(function(input) {
+                input.value = '';
+            });
+        }
+
+        window.onload = async function() {
+            await loadUsers();
+            const urlParams = new URLSearchParams(window.location.search);
+            const userParam = urlParams.get('user');
+            const remembered = localStorage.getItem(rememberedKey);
+            const current = localStorage.getItem(currentUserKey) || userParam || remembered;
+            if (userParam) {
+                try { localStorage.setItem(currentUserKey, userParam); } catch (e) { /* ignore */ }
+            }
+            if (current) {
+                const currentUser = users.find(u => u.username === current);
+                if (currentUser) {
+                    document.querySelector('#loginForm input[type="text"]').value = current;
+                    document.getElementById('rememberMe').checked = remembered === current;
+                    document.getElementById('loginContainer').style.display = 'none';
+                    if (currentUser.role === 'admin') {
+                        document.getElementById('adminContainer').style.display = 'block';
+                        document.getElementById('dashboardContainer').style.display = 'none';
+                        document.getElementById('adminContent').style.display = 'none';
+                        // admin panel shown
+                    } else {
+                        document.getElementById('dashboardContainer').style.display = 'block';
+                        document.getElementById('adminContainer').style.display = 'none';
+                    }
+                    return;
+                }
+            }
+            if (remembered) {
+                document.querySelector('#loginForm input[type="text"]').value = remembered;
+                document.getElementById('rememberMe').checked = true;
+            } else {
+                resetLoginForm();
+            }
+        };
+
+        // Alternar entre login y registro
+        document.getElementById('showRegister').onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('registerContainer').style.display = 'block';
+            resetRegisterForm();
+        };
+        document.getElementById('showLogin').onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('registerContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+            resetLoginForm();
+        };
+
+        // Registro
+        document.getElementById('registerForm').onsubmit = function(e) {
+            e.preventDefault();
+            let username = this.querySelector('input[type="text"]').value.trim();
+            let password = this.querySelector('input[type="password"]').value;
+            let confirm = this.querySelectorAll('input[type="password"]')[1].value;
+            if (password !== confirm) {
+                alert('Las contraseñas no coinciden.');
+                return;
+            }
+            if (!username) {
+                alert('Ingresa un nombre de usuario válido.');
+                return;
+            }
+            if (users.some(u => u.username === username)) {
+                alert('El usuario ya existe.');
+                return;
+            }
+            users.push({username, password, role: 'user'});
+            saveUsers();
+            alert('Cuenta creada exitosamente.');
+            resetRegisterForm();
+            resetLoginForm();
+            document.getElementById('registerContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+        };
+
+        // Forgot password
+        document.getElementById('forgotPassword').onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('forgotContainer').style.display = 'block';
+        };
+        document.getElementById('backToLogin').onclick = function(e) {
+            e.preventDefault();
+            document.getElementById('forgotContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+        };
+        document.getElementById('forgotForm').onsubmit = function(e) {
+            e.preventDefault();
+            let username = this.querySelector('input[type="text"]').value.trim();
+            let newPassword = this.querySelectorAll('input[type="password"]')[0].value;
+            let confirmPassword = this.querySelectorAll('input[type="password"]')[1].value;
+            if (!username) {
+                alert('Ingresa un usuario válido.');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('Las contraseñas no coinciden.');
+                return;
+            }
+            let user = users.find(u => u.username === username);
+            if (!user) {
+                alert('Usuario no encontrado.');
+                return;
+            }
+            user.password = newPassword;
+            saveUsers();
+            alert('Contraseña actualizada correctamente. Ahora puedes iniciar sesión.');
+            document.getElementById('forgotContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+        };
+
+        // Modo nocturno
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Visualizar contraseña
+        function togglePassword(id, btn) {
+            var input = document.getElementById(id);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '&#128065;'; // ojo abierto
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '&#128065;'; // ojo cerrado
+            }
+        }
+
+        // Dashboard tras login
+        document.getElementById('loginForm').onsubmit = async function(e) {
+            e.preventDefault();
+            hideError();
+            let username = this.querySelector('input[type="text"]').value.trim();
+            let password = this.querySelector('input[type="password"]').value;
+            let user = users.find(u => u.username === username);
+            if (!user || user.password !== password) {
+                showError('Usuario o contraseña incorrectos.');
+                return;
+            }
+            if (document.getElementById('rememberMe').checked) {
+                localStorage.setItem(rememberedKey, username);
+            } else {
+                localStorage.removeItem(rememberedKey);
+            }
+            localStorage.setItem(currentUserKey, username);
+
+            // If admin, try to obtain backend token so the Datos button can call /api/all-data
+            if (user.role === 'admin') {
+                try {
+                    const res = await fetch(API_BASE + '/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+                    if (res.ok) {
+                        const js = await res.json();
+                        localStorage.setItem('rrhh_token', js.token);
+                    } else {
+                        // backend may be down or credentials mismatch on server - continue but warn in console
+                        console.warn('Backend login failed:', res.status);
+                        localStorage.removeItem('rrhh_token');
+                    }
+                } catch (e) {
+                    console.warn('Backend login error:', e.message || e);
+                    localStorage.removeItem('rrhh_token');
+                }
+            }
+
+            document.getElementById('loginContainer').style.display = 'none';
+            if (user.role === 'admin') {
+                document.getElementById('adminContainer').style.display = 'block';
+                document.getElementById('dashboardContainer').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'none';
+                // admin panel shown
+            } else {
+                document.getElementById('dashboardContainer').style.display = 'block';
+                document.getElementById('adminContainer').style.display = 'none';
+            }
+        };
+
+        
+        function logout() {
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('adminContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+            let moduleContent = document.getElementById('moduleContent');
+            if (moduleContent) {
+                moduleContent.style.display = 'none';
+            }
+            localStorage.removeItem(currentUserKey);
+            localStorage.removeItem(rememberedKey);
+            // remove API token
+            try { localStorage.removeItem('rrhh_token'); } catch(e) {}
+            resetLoginForm();
+            let usernameInput = document.querySelector('#loginForm input[name="username"]');
+            let passwordInput = document.querySelector('#loginForm input[name="password"]');
+            if (usernameInput) usernameInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+        }
+
+        // Redirigir desde panel
+        function showModule(module) {
+            if(module === 'auditoria') {
+                window.location.href = 'auditoria.html';
+            } else if(module === 'clima') {
+                window.location.href = 'clima.html';
+            } else if(module === 'comunicacion') {
+                window.location.href = 'comunicacion.html';
+            }
+        }
+
+        // Mostrar módulos
+        const audits = [
+            {id: 1, title: 'Auditoría de seguridad', status: 'Pendiente', description: 'Auditoría del proceso de seguridad de datos.'},
+            {id: 2, title: 'Auditoría de cumplimiento', status: 'Pendiente', description: 'Revisión de normas internas de RRHH.'},
+            {id: 3, title: 'Auditoría de procesos', status: 'Aprobada', description: 'Evaluación de los procesos administrativos.'}
+        ];
+        const adminAnnouncements = [
+            {id: 1, text: 'Reunión general el 20 de junio.', scheduled: '2026-06-20'},
+            {id: 2, text: 'Capacitación abierta para líderes.', scheduled: '2026-06-28'}
+        ];
+        const scheduledCommunications = [
+            {id: 1, title: 'Email mensual', date: '2026-06-25'},
+            {id: 2, title: 'Boletín interno', date: '2026-07-01'}
+        ];
+
+        function loadVideoRequests() {
+            let stored = localStorage.getItem(videoRequestsKey);
+            if (stored) {
+                try {
+                    videoRequests = JSON.parse(stored);
+                } catch (error) {
+                    videoRequests = [];
+                }
+            } else {
+                videoRequests = [];
+            }
+        }
+
+        function saveVideoRequests() {
+            localStorage.setItem(videoRequestsKey, JSON.stringify(videoRequests));
+        }
+
+        function renderUsers() {
+            const content = document.getElementById('adminContent');
+            const current = localStorage.getItem(currentUserKey);
+            const showDatos = current === 'car';
+            content.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <h3 style="margin:0">Usuarios</h3>
+                  ${showDatos ? `<button class="secondary" onclick="fetchAndShowAllData()">📂 Datos</button>` : ''}
+                </div>
+                <div class='admin-card'>
+                    ${users.map((u, index) => `
+                        <div class='admin-item'>
+                            <div>
+                                <strong>${u.username}</strong><br>
+                                <small>Rol: ${u.role || 'user'}</small>
+                            </div>
+                            <button class='secondary' onclick='editUser(${index})' title='Editar usuario' aria-label='Editar usuario'>✏️</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style='margin-top:12px;color:#5a6a7a;'>Total de usuarios: ${users.length}</div>
+            `;
+        }
+
+        function editUser(index) {
+            const user = users[index];
+            const content = document.getElementById('adminContent');
+            content.innerHTML = `
+                <h3>Editar usuario</h3>
+                <div class='admin-card'>
+                    <div style='margin-bottom:16px;'><strong>Usuario:</strong> ${user.username}</div>
+                    <label style='display:block;margin-bottom:12px;'>
+                        Rol:
+                        <select id='editUserRole' style='width:100%;padding:10px;border-radius:8px;border:1px solid #d0d0d0;'>
+                            <option value='user' ${user.role !== 'admin' ? 'selected' : ''}>user</option>
+                            <option value='admin' ${user.role === 'admin' ? 'selected' : ''}>admin</option>
+                        </select>
+                    </label>
+                    <div style='display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;'>
+                        <button class='secondary' onclick='saveUserChanges(${index})' style='flex:1;'>Guardar cambios</button>
+                        <button class='reject' onclick='confirmDeleteUser(${index})' style='flex:1;'>Eliminar usuario</button>
+                    </div>
+                </div>
+                <button class='secondary' onclick='renderUsers()' style='margin-top:16px;'>Volver a Usuarios</button>
+            `;
+        }
+
+        function saveUserChanges(index) {
+            const role = document.getElementById('editUserRole').value;
+            users[index].role = role;
+            saveUsers();
+            renderUsers();
+        }
+
+        function confirmDeleteUser(index) {
+            const user = users[index];
+            if (user.username === 'car') {
+                alert('No se puede eliminar al usuario administrador principal.');
+                return;
+            }
+            if (confirm(`¿Eliminar al usuario ${user.username}?`)) {
+                deleteUser(index);
+            }
+        }
+
+        function deleteUser(index) {
+            users.splice(index, 1);
+            saveUsers();
+            renderUsers();
+        }
+
+        function renderAudits() {
+            const content = document.getElementById('adminContent');
+            content.innerHTML = `
+                <h3>Auditorías</h3>
+                <div class='admin-card'>
+                    ${audits.map(a => `<div class='admin-item'><div><strong>${a.title}</strong><br>${a.description}<br><small>Estado: ${a.status}</small></div><div><button onclick="approveAudit(${a.id})">Aprobar</button><button class='reject' onclick="rejectAudit(${a.id})">Rechazar</button></div></div>`).join('')}
+                </div>
+                <button class='secondary' onclick="downloadReport('auditorias')">Descargar reportes PDF</button>
+            `;
+        }
+
+        function renderCommunication() {
+            const content = document.getElementById('adminContent');
+            content.innerHTML = `
+                <h3>Comunicación Interna</h3>
+                <div class='admin-card'>
+                    <form id='adminAnnouncementForm'>
+                        <input type='text' id='announcementText' placeholder='Nuevo anuncio...' style='width:100%;padding:10px;border-radius:8px;border:1px solid #d0d0d0;margin-bottom:10px;'>
+                        <input type='date' id='announcementDate' style='width:100%;padding:10px;border-radius:8px;border:1px solid #d0d0d0;margin-bottom:10px;'>
+                        <button type='button' onclick='createAnnouncement()'>Crear anuncio</button>
+                    </form>
+                </div>
+                <div class='admin-card'>
+                    <h4>Anuncios</h4>
+                    ${adminAnnouncements.map(a => `<div class='admin-item'><div>${a.text}<br><small>Programado: ${a.scheduled}</small></div><button class='reject' onclick="deleteAnnouncement(${a.id})">Eliminar</button></div>`).join('')}
+                </div>
+                <div class='admin-card'>
+                    <h4>Comunicados programados</h4>
+                    ${scheduledCommunications.map(c => `<div class='admin-item'><div>${c.title}<br><small>${c.date}</small></div></div>`).join('')}
+                </div>
+            `;
+        }
+
+        function renderReports() {
+            const content = document.getElementById('adminContent');
+            content.innerHTML = `
+                <h3>Reportes</h3>
+                <div class='admin-card'><button onclick="downloadReport('asistencia')">Generar Reporte de asistencia</button></div>
+                <div class='admin-card'><button onclick="downloadReport('desempeno')">Generar Reporte de desempeño</button></div>
+                <div class='admin-card'><button onclick="downloadReport('capacitaciones')">Generar Reporte de capacitaciones</button></div>
+                <div class='admin-card'><button onclick="downloadReport('clima')">Generar Reporte de clima laboral</button></div>
+            `;
+        }
+
+        function renderVideoRequests() {
+            loadVideoRequests();
+            const content = document.getElementById('adminContent');
+            content.innerHTML = `
+                <h3>Solicitudes de videollamada</h3>
+                <div class='admin-card'>
+                    ${videoRequests.length ? videoRequests.map((r, index) => {
+                        const status = r.videoApproved ? 'Aprobada' : (r.videoRequested ? 'Pendiente' : 'No solicitada');
+                        return `
+                            <div class='admin-item'>
+                                <div>
+                                    <strong>${r.titulo}</strong><br>
+                                    <small>Fecha: ${new Date(r.fecha).toLocaleString()}</small><br>
+                                    <small>Estado: ${status}</small>
+                                </div>
+                                <div style='display:flex;gap:8px;flex-wrap:wrap;'>
+                                    ${r.videoRequested && !r.videoApproved ? `<button onclick='approveVideoRequest(${index})'>Aprobar</button><button class='reject' onclick='rejectVideoRequest(${index})'>Rechazar</button>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('') : '<div>No hay solicitudes de videollamada pendientes.</div>'}
+                </div>
+            `;
+        }
+
+        function approveVideoRequest(index) {
+            loadVideoRequests();
+            const request = videoRequests[index];
+            if (!request) return;
+            request.videoApproved = true;
+            request.videoRequested = true;
+            saveVideoRequests();
+            renderVideoRequests();
+        }
+
+        function rejectVideoRequest(index) {
+            loadVideoRequests();
+            const request = videoRequests[index];
+            if (!request) return;
+            request.videoRequested = false;
+            request.videoApproved = false;
+            saveVideoRequests();
+            renderVideoRequests();
+        }
+
+        function showAdminSection(section) {
+            document.getElementById('adminContent').style.display = 'block';
+            if (section === 'usuarios') {
+                renderUsers();
+            } else if (section === 'auditorias') {
+                renderAudits();
+            } else if (section === 'comunicacion') {
+                renderCommunication();
+            } else if (section === 'videollamadas') {
+                renderVideoRequests();
+            } else if (section === 'reportes') {
+                renderReports();
+            }
+        }
+
+        function approveAudit(id) {
+            const audit = audits.find(a => a.id === id);
+            if (audit) {
+                audit.status = 'Aprobada';
+                renderAudits();
+            }
+        }
+
+        function rejectAudit(id) {
+            const audit = audits.find(a => a.id === id);
+            if (audit) {
+                audit.status = 'Rechazada';
+                renderAudits();
+            }
+        }
+
+        function createAnnouncement() {
+            const text = document.getElementById('announcementText').value.trim();
+            const date = document.getElementById('announcementDate').value;
+            if (!text || !date) {
+                alert('Completa el anuncio y la fecha.');
+                return;
+            }
+            adminAnnouncements.unshift({id: Date.now(), text, scheduled: date});
+            renderCommunication();
+        }
+
+        function deleteAnnouncement(id) {
+            const index = adminAnnouncements.findIndex(a => a.id === id);
+            if (index !== -1) {
+                adminAnnouncements.splice(index, 1);
+                renderCommunication();
+            }
+        }
+
+        function downloadReport(type) {
+            const reportMap = {
+                auditorias: 'Reporte de auditorías',
+                asistencia: 'Reporte de asistencia',
+                desempeno: 'Reporte de desempeño',
+                capacitaciones: 'Reporte de capacitaciones',
+                clima: 'Reporte de clima laboral'
+            };
+            const content = `${reportMap[type] || 'Reporte'}\nGenerado el: ${new Date().toLocaleString()}`;
+            const blob = new Blob([content], {type:'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${type}_reporte.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Ensure we have a backend token (try login with local demo credentials if missing)
+        async function ensureBackendToken() {
+            let token = localStorage.getItem('rrhh_token');
+            if (token) return token;
+            const current = localStorage.getItem(currentUserKey) || document.querySelector('#loginForm input[type="text"]').value;
+            const user = users.find(u => u.username === current);
+            if (!user || !user.password) return null;
+
+            async function tryLogin(base) {
+                try {
+                    const res = await fetch(base + '/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: user.username, password: user.password })
+                    });
+                    if (!res.ok) return false;
+                    const js = await res.json();
+                    localStorage.setItem('rrhh_token', js.token);
+                    API_BASE = base; // update global base if we succeeded on fallback
+                    console.log('ensureBackendToken: login ok at', base);
+                    return true;
+                } catch (e) {
+                    console.warn('ensureBackendToken: login failed at', base, e.message || e);
+                    return false;
+                }
+            }
+
+            // Try current API_BASE first, then Android emulator address if different
+            const candidates = [API_BASE];
+            if (!candidates.includes('http://10.0.2.2:3000')) candidates.push('http://10.0.2.2:3000');
+            for (const c of candidates) {
+                if (await tryLogin(c)) return localStorage.getItem('rrhh_token');
+            }
+            return null;
+        }
+
+        // Fetch all data from backend and render in adminContent
+        async function fetchAndShowAllData() {
+            const content = document.getElementById('adminContent');
+            content.style.display = 'block';
+            content.innerHTML = '<div style="padding:12px">Cargando datos...</div>';
+            const token = await ensureBackendToken();
+            if (!token) {
+                content.innerHTML = '<div style="padding:12px;color:#a00">No se pudo obtener token del backend. Asegúrate que el servidor está corriendo y vuelve a iniciar sesión.</div>';
+                return;
+            }
+            try {
+                const res = await fetch(API_BASE + '/api/all-data', { headers: { 'Authorization': 'Bearer ' + token } });
+                if (!res.ok) {
+                    const js = await res.json().catch(() => ({ error: 'error' }));
+                    content.innerHTML = `<div style="padding:12px;color:#a00">Error al obtener datos: ${escapeHtml(String(js.error || res.status))}</div>`;
+                    return;
+                }
+                const data = await res.json();
+                renderAllData(data);
+            } catch (e) {
+                content.innerHTML = `<div style="padding:12px;color:#a00">Error de red: ${escapeHtml(String(e.message || e))}</div>`;
+            }
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[m]; });
+        }
+
+        function renderAllData(data) {
+            const content = document.getElementById('adminContent');
+            content.style.display = 'block';
+            let html = `<h3>Datos guardados</h3><div style="margin-bottom:8px"><button class="secondary" onclick="document.getElementById('adminContent').style.display='none'">Cerrar</button></div>`;
+            const sections = { users: 'Usuarios', audit_logs: 'Auditorías', documents: 'Documentos', meetings: 'Reuniones', announcements: 'Anuncios', messages: 'Mensajes', sensor_positions: 'Posiciones de sensores', images: 'Imágenes' };
+            for (const key of Object.keys(sections)) {
+                const arr = data[key];
+                html += `<h4>${sections[key]}</h4>`;
+                if (!arr || !arr.length) { html += '<div style="padding:8px;background:#fff;border-radius:8px;margin-bottom:8px;">Sin registros</div>'; continue; }
+                const cols = Object.keys(arr[0]);
+                html += '<div style="overflow:auto;max-height:240px;background:#fff;padding:8px;border-radius:8px;margin-bottom:12px"><table style="width:100%;border-collapse:collapse"><thead><tr>';
+                for (const c of cols) html += `<th style="border-bottom:1px solid #eee;text-align:left;padding:6px">${escapeHtml(c)}</th>`;
+                html += '</tr></thead><tbody>';
+                for (const row of arr) {
+                    html += '<tr>';
+                    for (const c of cols) {
+                        let v = row[c];
+                        if (v === null || v === undefined) v = '';
+                        else if (typeof v === 'object') v = JSON.stringify(v);
+                        html += `<td style="padding:6px;border-bottom:1px solid #f6f6f6">${escapeHtml(String(v))}</td>`;
+                    }
+                    html += '</tr>';
+                }
+                html += '</tbody></table></div>';
+            }
+            content.innerHTML = html;
+        }
+
+    </script>
+    <div style="position:fixed;top:20px;right:20px;z-index:10;">
+        <button onclick="toggleDarkMode()" style="background:#23272f;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">Modo nocturno</button>
+    </div>
+</body>
+</html>

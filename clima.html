@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima Organizacional RRHH</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('img/fondo.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .panel {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 40px 32px;
+            width: 520px;
+            max-width: 95vw;
+        }
+        .logo {
+            width: 120px;
+            display: block;
+            margin: 0 auto 18px auto;
+        }
+        h2 {
+            color: #0083b3;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #5a6a7a;
+            font-size: 15px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 24px;
+        }
+        .section h3 {
+            color: #0083b3;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #0083b3 60%, #00b3a3 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 18px;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #006e94 60%, #009e94 100%);
+        }
+        .chart {
+            width: 100%;
+            height: 220px;
+            margin-bottom: 12px;
+            background: #f4f8fc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        textarea {
+            width: 100%;
+            min-height: 60px;
+            border-radius: 6px;
+            border: 1px solid #d0d0d0;
+            font-size: 15px;
+            padding: 8px;
+            margin-bottom: 8px;
+            resize: vertical;
+        }
+        .comment {
+            background: #f4f8fc;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .btn-small {
+            display: inline-block;
+            padding: 8px 14px;
+            font-size: 14px;
+            width: auto;
+            margin-top: 8px;
+        }
+        .video-panel {
+            background: #eef7ff;
+            border: 1px solid #c7e4ff;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 24px;
+        }
+        .video-panel h3 {
+            margin-top: 0;
+        }
+        .video-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            margin-top: 12px;
+        }
+        .video-wrapper video {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 12px;
+            background: #000;
+        }
+        .video-info {
+            text-align: center;
+            color: #005a8c;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <img src="img/logo.png" alt="Logotipo RRHH" class="logo">
+        <h2>Clima Organizacional</h2>
+        <div class="subtitle">Reuniones y videollamadas</div>
+
+        <!-- Reuniones -->
+        <div class="section">
+            <h3>Reuniones</h3>
+            <form id="reunionForm">
+                <label>Título de la reunión:
+                    <input type="text" name="titulo" placeholder="Título" required>
+                </label><br><br>
+                <label>Fecha y hora:
+                    <input type="datetime-local" name="fecha" required>
+                </label><br><br>
+                <label>Descripción:
+                    <textarea name="descripcion" placeholder="Descripción de la reunión..." required></textarea>
+                </label><br><br>
+                <button type="submit" class="btn">Programar reunión</button>
+            </form>
+            <div id="reunionesList">
+                <!-- JS rellena -->
+            </div>
+        </div>
+
+        <!-- Video llamada -->
+        <div class="section video-panel">
+            <h3>Video llamada</h3>
+            <div class="video-info" id="videoStatus">Selecciona una reunión y únete a la videollamada.</div>
+            <div class="video-wrapper">
+                <video id="videoCall" autoplay playsinline muted></video>
+                <div>
+                    <button id="startVideoBtn" type="button" class="btn btn-small">Iniciar cámara</button>
+                    <button id="stopVideoBtn" type="button" class="btn btn-small" disabled>Finalizar llamada</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn" onclick="goPanel()">Volver al panel principal</button>
+    </div>
+
+    <script>
+    const meetingsKey = 'clima_reuniones';
+    let reuniones = [];
+    const API_BASE = 'http://127.0.0.1:3000';
+
+    async function loadReuniones() {
+        // Try API first
+        try {
+            const res = await fetch(API_BASE + '/api/meetings');
+            if (res.ok) { reuniones = await res.json(); return; }
+        } catch (e) {}
+        const stored = localStorage.getItem(meetingsKey);
+        if (stored) {
+            try { reuniones = JSON.parse(stored); } catch (error) { reuniones = []; }
+        }
+    }
+
+    function saveReuniones() {
+        localStorage.setItem(meetingsKey, JSON.stringify(reuniones));
+    }
+
+    // Reuniones
+    document.getElementById('reunionForm').onsubmit = function(e) {
+        e.preventDefault();
+        const titulo = this.titulo.value.trim();
+        const fecha = this.fecha.value;
+        const descripcion = this.descripcion.value.trim();
+        if(titulo && fecha && descripcion) {
+            reuniones.push({id: Date.now(), titulo, fecha, descripcion, videoRequested: false, videoApproved: false});
+            saveReuniones();
+            renderReuniones();
+            this.reset();
+        }
+    };
+    function renderReuniones() {
+        const list = document.getElementById('reunionesList');
+        list.innerHTML = reuniones.length ? reuniones.map((r, index) => {
+            let buttonHtml = '';
+            if (!r.videoRequested) {
+                buttonHtml = `<button class='btn btn-small' type='button' onclick='requestVideoMeeting(${index})'>Solicitar videollamada</button>`;
+            } else if (r.videoRequested && !r.videoApproved) {
+                buttonHtml = `<button class='btn btn-small' type='button' disabled style='background:#999;'>Solicitud pendiente</button>`;
+            } else {
+                buttonHtml = `<button class='btn btn-small' type='button' onclick='joinMeeting(${index})'>Unirse a videollamada</button>`;
+            }
+            return `
+            <div class='comment'>
+                <strong>${r.titulo}</strong><br>
+                Fecha: ${new Date(r.fecha).toLocaleString()}<br>
+                ${r.descripcion}<br>
+                ${buttonHtml}
+                <button class='btn btn-small' type='button' onclick='deleteMeeting(${index})' style='background:#ff6b6b;margin-left:5px;'>Eliminar</button>
+            </div>
+        `;
+        }).join('') : 'Sin reuniones programadas. Crea una nueva.';
+    }
+
+    // Videollamada
+    let selectedMeeting = null;
+    let videoStream = null;
+    const videoElement = document.getElementById('videoCall');
+    const videoStatus = document.getElementById('videoStatus');
+    const startVideoBtn = document.getElementById('startVideoBtn');
+    const stopVideoBtn = document.getElementById('stopVideoBtn');
+    const videoPanel = document.querySelector('.video-panel');
+    const videoWrapper = document.querySelector('.video-wrapper');
+
+
+    function joinMeeting(index) {
+        const meeting = reuniones[index];
+        if (!meeting) return;
+        if (!meeting.videoApproved) {
+            videoStatus.textContent = 'La videollamada aún no ha sido aprobada por el administrador.';
+            return;
+        }
+        selectedMeeting = meeting;
+        videoPanel.style.display = 'block';
+        videoWrapper.style.display = 'flex';
+        videoStatus.textContent = `Conectado a: ${selectedMeeting.titulo}`;
+        startVideoBtn.disabled = false;
+        stopVideoBtn.disabled = false;
+        console.log('Unido a reunión:', selectedMeeting);
+    }
+
+    function requestVideoMeeting(index) {
+        const meeting = reuniones[index];
+        if (!meeting) return;
+        meeting.videoRequested = true;
+        meeting.videoApproved = false;
+        saveReuniones();
+        renderReuniones();
+        videoStatus.textContent = 'Solicitud enviada. Espera aprobación del administrador.';
+    }
+
+    function deleteMeeting(index) {
+        reuniones.splice(index, 1);
+        renderReuniones();
+        if (reuniones.length === 0) {
+            videoPanel.style.display = 'none';
+            videoWrapper.style.display = 'none';
+            selectedMeeting = null;
+        }
+    }
+
+    async function startVideoCall() {
+        if (!selectedMeeting) {
+            videoStatus.textContent = 'Selecciona primero una reunión para unirte a la videollamada.';
+            return;
+        }
+        try {
+            const constraints = { video: true, audio: true };
+            videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+            videoElement.srcObject = videoStream;
+            startVideoBtn.disabled = true;
+            stopVideoBtn.disabled = false;
+            videoStatus.textContent = `Videollamada activa: ${selectedMeeting.titulo}`;
+        } catch (error) {
+            videoStatus.textContent = 'No se pudo iniciar la cámara: ' + error.message;
+            console.error(error);
+        }
+    }
+
+    function stopVideoCall() {
+        console.log('Finalizando llamada');
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            videoStream = null;
+        }
+        videoElement.srcObject = null;
+        videoWrapper.style.display = 'none';
+        videoStatus.textContent = 'Videollamada finalizada';
+        selectedMeeting = null;
+    }
+
+    // Inicialización
+    window.onload = function() {
+        loadReuniones();
+        renderReuniones();
+        videoPanel.style.display = 'none';
+        videoWrapper.style.display = 'none';
+        startVideoBtn.disabled = true;
+        stopVideoBtn.disabled = true;
+        
+        // Event listeners
+        startVideoBtn.onclick = startVideoCall;
+        stopVideoBtn.onclick = stopVideoCall;
+        // Detectar cambios en localStorage realizados por el admin (aprobaciones)
+        window.addEventListener('storage', (e) => {
+            if (e.key === meetingsKey) {
+                try { reuniones = JSON.parse(e.newValue || '[]'); } catch (err) { reuniones = []; }
+                renderReuniones();
+                if (selectedMeeting) {
+                    const m = reuniones.find(r => (r.id && selectedMeeting.id && r.id === selectedMeeting.id) || (r.titulo === selectedMeeting.titulo && r.fecha === selectedMeeting.fecha));
+                    if (m && m.videoApproved) {
+                        selectedMeeting = m;
+                        videoStatus.textContent = 'Solicitud aprobada. Puedes iniciar la videollamada.';
+                        startVideoBtn.disabled = false;
+                        stopVideoBtn.disabled = false;
+                    }
+                }
+            }
+        });
+
+        // Fallback: poll localStorage en el mismo tab por si no se dispara el evento storage
+        let _lastMeetingsSnapshot = localStorage.getItem(meetingsKey);
+        setInterval(() => {
+            const current = localStorage.getItem(meetingsKey);
+            if (current !== _lastMeetingsSnapshot) {
+                _lastMeetingsSnapshot = current;
+                try { reuniones = JSON.parse(current || '[]'); } catch (err) { reuniones = []; }
+                renderReuniones();
+                if (selectedMeeting) {
+                    const m = reuniones.find(r => (r.id && selectedMeeting.id && r.id === selectedMeeting.id) || (r.titulo === selectedMeeting.titulo && r.fecha === selectedMeeting.fecha));
+                    if (m && m.videoApproved) {
+                        selectedMeeting = m;
+                        videoStatus.textContent = 'Solicitud aprobada. Puedes iniciar la videollamada.';
+                        startVideoBtn.disabled = false;
+                        stopVideoBtn.disabled = false;
+                    }
+                }
+            }
+        }, 2000);
+    };
+
+    // Ir al panel principal preservando sesión (si existe) o usando rememberedUser. Incluye user en la URL para WebViews.
+    function goPanel() {
+        try {
+            const current = localStorage.getItem('currentUser') || localStorage.getItem('rememberedUser') || 'user';
+            if (current) localStorage.setItem('currentUser', current);
+            const user = encodeURIComponent(current || 'user');
+            window.location.href = 'login3.html?user=' + user + '#panel';
+        } catch (e) {
+            // fallback: simple redirect
+            window.location.href = 'login3.html#panel';
+        }
+    }
+    </script>
+</body>
+</html>

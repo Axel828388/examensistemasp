@@ -1,0 +1,320 @@
+// Kotlin Room Entities and DAOs (paste into Android Studio project)
+
+// User.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "users")
+data class User(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val username: String,
+    val password_hash: String,
+    val role: String = "user",
+    val created_at: String
+)
+
+// UserDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface UserDao {
+    @Query("SELECT * FROM users WHERE id = :id")
+    fun getById(id: Long): User?
+
+    @Query("SELECT * FROM users ORDER BY id ASC")
+    fun getAll(): List<User>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(user: User): Long
+
+    @Update
+    fun update(user: User)
+
+    @Delete
+    fun delete(user: User)
+}
+
+// Meeting.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "meetings")
+data class Meeting(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val title: String,
+    val datetime: String,
+    val description: String?,
+    val video_requested: Int = 0,
+    val video_approved: Int = 0,
+    val created_by: Long?,
+    val created_at: String
+)
+
+// MeetingDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface MeetingDao {
+    @Query("SELECT * FROM meetings ORDER BY datetime DESC")
+    fun getAll(): List<Meeting>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(meeting: Meeting): Long
+
+    @Update
+    fun update(meeting: Meeting)
+
+    @Delete
+    fun delete(meeting: Meeting)
+}
+
+// Announcement.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "announcements")
+data class Announcement(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val text: String,
+    val scheduled_at: String?,
+    val created_by: Long?,
+    val created_at: String
+)
+
+// AnnouncementDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface AnnouncementDao {
+    @Query("SELECT * FROM announcements ORDER BY scheduled_at DESC")
+    fun getAll(): List<Announcement>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(announcement: Announcement): Long
+
+    @Delete
+    fun delete(announcement: Announcement)
+}
+
+// SensorPosition.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "sensor_positions")
+data class SensorPosition(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val device_id: String?,
+    val lat: Double,
+    val lng: Double,
+    val accuracy: Double?,
+    val altitude: Double?,
+    val altitude_accuracy: Double?,
+    val speed: Double?,
+    val heading: Double?,
+    val ts: Long,
+    val created_at: String
+)
+
+// SensorPositionDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface SensorPositionDao {
+    @Query("SELECT * FROM sensor_positions ORDER BY ts DESC LIMIT :limit")
+    fun recent(limit: Int = 100): List<SensorPosition>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(pos: SensorPosition): Long
+}
+
+// Document.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "documents")
+data class Document(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val filename: String,
+    val path: String?,
+    val employee: String?,
+    val uploaded_by: Long?,
+    val uploaded_at: String
+)
+
+// DocumentDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface DocumentDao {
+    @Query("SELECT * FROM documents ORDER BY uploaded_at DESC")
+    fun getAll(): List<Document>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(doc: Document): Long
+
+    @Delete
+    fun delete(doc: Document)
+}
+
+// Image.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "images")
+data class Image(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val filename: String,
+    val path: String?,
+    val mime: String?,
+    val captured_at: String?,
+    val uploaded_by: Long?,
+    val uploaded_at: String
+)
+
+// ImageDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface ImageDao {
+    @Query("SELECT * FROM images ORDER BY uploaded_at DESC")
+    fun getAll(): List<Image>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(img: Image): Long
+
+    @Delete
+    fun delete(img: Image)
+}
+
+// AuditLog.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "audit_logs")
+data class AuditLog(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val user_id: Long?,
+    val action: String,
+    val details: String?,
+    val created_at: String
+)
+
+// AuditLogDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface AuditLogDao {
+    @Query("SELECT * FROM audit_logs ORDER BY created_at DESC")
+    fun getAll(): List<AuditLog>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(log: AuditLog): Long
+}
+
+// Message.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "messages")
+data class Message(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val from_user: Long?,
+    val message: String,
+    val created_at: String
+)
+
+// MessageDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface MessageDao {
+    @Query("SELECT * FROM messages ORDER BY created_at ASC")
+    fun getAll(): List<Message>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(msg: Message): Long
+}
+
+// Event.kt
+package com.example.rrhh.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "events")
+data class Event(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val title: String,
+    val date: String,
+    val description: String?,
+    val created_by: Long?,
+    val created_at: String
+)
+
+// EventDao.kt
+package com.example.rrhh.data
+
+import androidx.room.*
+
+@Dao
+interface EventDao {
+    @Query("SELECT * FROM events ORDER BY date DESC")
+    fun getAll(): List<Event>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(ev: Event): Long
+
+    @Delete
+    fun delete(ev: Event)
+}
+
+// Database.kt
+package com.example.rrhh.data
+
+import androidx.room.Database
+import androidx.room.RoomDatabase
+
+@Database(entities = [User::class, Meeting::class, Announcement::class, SensorPosition::class, Document::class, Image::class, AuditLog::class, Message::class, Event::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun userDao(): UserDao
+    abstract fun meetingDao(): MeetingDao
+    abstract fun announcementDao(): AnnouncementDao
+    abstract fun sensorPositionDao(): SensorPositionDao
+    abstract fun documentDao(): DocumentDao
+    abstract fun imageDao(): ImageDao
+    abstract fun auditLogDao(): AuditLogDao
+    abstract fun messageDao(): MessageDao
+    abstract fun eventDao(): EventDao
+}

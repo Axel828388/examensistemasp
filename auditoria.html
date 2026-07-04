@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría RRHH</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('img/fondo.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .panel {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 40px 32px;
+            width: 480px;
+            max-width: 95vw;
+        }
+        .logo {
+            width: 120px;
+            display: block;
+            margin: 0 auto 18px auto;
+        }
+        h2 {
+            color: #1a2a3a;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #5a6a7a;
+            font-size: 15px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 24px;
+        }
+        .section h3 {
+            color: #0056b3;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        .section ul {
+            margin-left: 18px;
+            color: #333;
+            font-size: 15px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #0056b3 60%, #0083b3 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: bold;
+            margin-top: 18px;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #004494 60%, #006e94 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <img src="img/logo.png" alt="Logotipo RRHH" class="logo">
+        <h2>Auditoría RRHH</h2>
+        <div class="subtitle">Gestión integral de auditoría de talento</div>
+
+        <!-- Historial de cambios -->
+        <div class="section">
+            <h3>Historial de cambios</h3>
+            <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">
+                <thead>
+                    <tr style="background:#f4f8fc;">
+                        <th style="padding:8px;">Usuario</th>
+                        <th style="padding:8px;">Fecha</th>
+                        <th style="padding:8px;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="historialTable">
+                    <!-- JS rellena -->
+                </tbody>
+            </table>
+            <button class="btn" onclick="verHistorial()">Ver historial</button>
+        </div>
+
+        <!-- Gestión de documentos -->
+        <div class="section">
+            <h3>Gestión de documentos</h3>
+            <form id="docForm" enctype="multipart/form-data" style="margin-bottom:12px;">
+                <input type="file" id="docFile" accept="application/pdf" required>
+                <button type="submit" class="btn" style="margin-top:8px;">Subir documento</button>
+            </form>
+            <div id="docsList">
+                <!-- JS rellena -->
+            </div>
+        </div>
+
+        <button class="btn" onclick="goPanel()">Volver al panel principal</button>
+    </div>
+
+    <script>
+    const API_BASE = 'http://127.0.0.1:3000';
+    // Datos simulados
+    const empleados = [
+        {nombre:'Juan Pérez', contrato:true, induccion:true, documentos:false},
+        {nombre:'Ana Gómez', contrato:false, induccion:true, documentos:true},
+        {nombre:'Luis Torres', contrato:true, induccion:false, documentos:true}
+    ];
+    const checklist = [
+        {proceso:'Contrato', completado:false},
+        {proceso:'Inducción', completado:true},
+        {proceso:'Documentos', completado:false}
+    ];
+    const historial = [
+        {usuario:'admin', fecha:'2026-03-18', accion:'Subió contrato de Juan Pérez'},
+        {usuario:'ana', fecha:'2026-03-17', accion:'Marcó inducción de Luis Torres'},
+    ];
+    const alertas = [
+        'Ana Gómez sin contrato',
+        'Juan Pérez sin documentos',
+    ];
+    let documentos = [
+        {nombre:'Contrato_JuanPerez.pdf', empleado:'Juan Pérez'},
+        {nombre:'Documentos_AnaGomez.pdf', empleado:'Ana Gómez'}
+    ];
+
+    // Cumplimiento de normas
+    function verificarNormas() {
+        const tbody = document.getElementById('normasTable');
+        tbody.innerHTML = empleados.map(e => `
+            <tr>
+                <td style='padding:8px;'>${e.nombre}</td>
+                <td style='padding:8px;'>${e.contrato ? '✔️' : '❌'}</td>
+                <td style='padding:8px;'>${e.induccion ? '✔️' : '❌'}</td>
+                <td style='padding:8px;'>${e.documentos ? '✔️' : '❌'}</td>
+            </tr>
+        `).join('');
+    }
+
+    // Checklist de procesos
+    function renderChecklist() {
+        const container = document.getElementById('checklistContainer');
+        container.innerHTML = checklist.map((c,i) => `
+            <label style='display:block;margin-bottom:6px;'>
+                <input type='checkbox' ${c.completado ? 'checked' : ''} onchange='toggleChecklist(${i})'> ${c.proceso}
+            </label>
+        `).join('');
+    }
+    function toggleChecklist(idx) {
+        checklist[idx].completado = !checklist[idx].completado;
+        renderChecklist();
+    }
+
+    // Historial de cambios
+    function verHistorial() {
+        const tbody = document.getElementById('historialTable');
+        tbody.innerHTML = historial.map(h => `
+            <tr>
+                <td style='padding:8px;'>${h.usuario}</td>
+                <td style='padding:8px;'>${h.fecha}</td>
+                <td style='padding:8px;'>${h.accion}</td>
+            </tr>
+        `).join('');
+    }
+
+    // Alertas automáticas
+    function verAlertas() {
+        const container = document.getElementById('alertasContainer');
+        container.innerHTML = alertas.length ? alertas.map(a => `<div>${a}</div>`).join('') : 'Sin alertas.';
+    }
+
+    // Gestión de documentos
+    function renderDocs() {
+        const list = document.getElementById('docsList');
+        list.innerHTML = documentos.length ? '<ul>' + documentos.map(d => `<li>${d.nombre} (${d.empleado})</li>`).join('') + '</ul>' : 'Sin documentos.';
+    }
+    document.getElementById('docForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const fileInput = document.getElementById('docFile');
+        if(!fileInput.files.length) return;
+        const file = fileInput.files[0];
+        // try upload to API
+        const form = new FormData(); form.append('file', file);
+        try {
+            const res = await fetch(API_BASE + '/api/upload', { method: 'POST', body: form });
+            if (res.ok) { const json = await res.json(); documentos.push({nombre:file.name, empleado:'Empleado X', path: json.path}); renderDocs(); fileInput.value = ''; return; }
+        } catch (err) {}
+        documentos.push({nombre:file.name, empleado:'Empleado X'});
+        renderDocs();
+        fileInput.value = '';
+    };
+
+    // Inicialización
+    window.onload = function() {
+        renderChecklist();
+        renderDocs();
+    };
+
+    // Ir al panel principal preservando sesión (incluye user en la URL para compatibilidad WebView)
+    function goPanel() {
+        try {
+            const current = localStorage.getItem('currentUser') || localStorage.getItem('rememberedUser') || 'user';
+            if (current) localStorage.setItem('currentUser', current);
+            const user = encodeURIComponent(current || 'user');
+            window.location.href = 'login3.html?user=' + user + '#panel';
+        } catch (e) {
+            window.location.href = 'login3.html#panel';
+        }
+    }
+    </script>
+</body>
+</html>
